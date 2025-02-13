@@ -40,7 +40,7 @@ jobs:
        uses: actions/upload-artifact@v4
        with:
         name: node-modules-artifact
-        path: node_modules
+        path: ~/.npm
   
   deploy:
     name: deploy
@@ -80,9 +80,12 @@ jobs:
           name: node-modules-artifact
           path: node_modules
 
-      - name: Copy Code to Server
+      - name: Copy code to server
         run: |
           scp -i "pennsylvania-sam-mbp.pem" -r release/* ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com:/home/ubuntu/app2/
+
+      - name: Copy node_modules to server
+        run: |
           scp -i "pennsylvania-sam-mbp.pem" -r node_modules ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com:/home/ubuntu/app2/
 
           
