@@ -58,7 +58,6 @@ jobs:
       - name: SSH into Server and List Files
         run: ssh -i "pennsylvania-sam-mbp.pem" ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com "ls -lah"
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
+      - name: Copy Code to Server
+        run: |
+          scp -i "pennsylvania-sam-mbp.pem" -r release/* ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com:/home/ubuntu/app2/
