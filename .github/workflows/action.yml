@@ -58,6 +58,14 @@ jobs:
       - name: SSH into Server and List Files
         run: ssh -i "pennsylvania-sam-mbp.pem" ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com "ls -lah"
 
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-artifact
+          path: release/
+
       - name: Copy Code to Server
         run: |
           scp -i "pennsylvania-sam-mbp.pem" -r release/* ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com:/home/ubuntu/app2/
+
+          
