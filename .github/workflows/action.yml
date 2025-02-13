@@ -44,6 +44,10 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > pennsylvania-sam-mbp.pem
           chmod 600 pennsylvania-sam-mbp.pem
+      
+      - name: Add Server to Known Hosts
+        run: |
+          ssh-keyscan -H ec2-18-226-104-112.us-east-2.compute.amazonaws.com >> ~/.ssh/known_hosts
 
       - name: SSH into Server and List Files
         run: ssh -i "pennsylvania-sam-mbp.pem" ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com "ls -lah"
