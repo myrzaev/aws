@@ -41,11 +41,18 @@ jobs:
     name: deploy
     needs: build
     runs-on: ubuntu-latest
+
+    env:
+      SERVER_USERNAME: ubuntu
+      SERVER_IP: ec2-18-226-104-112.us-east-2.compute.amazonaws.com
+      SSH_KEY_PATH: pennsylvania-sam-mbp.pem
+      TARGET_DIR: /home/ubuntu/app2
+
     steps:
       - name: Setup SSH Key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > pennsylvania-sam-mbp.pem
-          chmod 600 pennsylvania-sam-mbp.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > $SSH_KEY_PATH
+          chmod 600 $SSH_KEY_PATH
 
       - name: Ensure SSH Directory Exists
         run: |
@@ -54,14 +61,14 @@ jobs:
       
       - name: Add Server to Known Hosts
         run: |
-          ssh-keyscan -H ec2-18-226-104-112.us-east-2.compute.amazonaws.com >> ~/.ssh/known_hosts
+          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
       - name: SSH into Server and List Files
-        run: ssh -i "pennsylvania-sam-mbp.pem" ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com "ls -lah"
+        run: ssh -i "$SSH_KEY_PATH" $SERVER_USERNAME@$SERVER_IP "ls -lah"
 
       - name: Create target directory on server
         run: |
-          ssh -i "pennsylvania-sam-mbp.pem" ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com "mkdir -p /home/ubuntu/app2/foo"
+          ssh -i "$SSH_KEY_PATH" $SERVER_USERNAME@$SERVER_IP "mkdir -p $TARGET_DIR/foo"
 
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -71,12 +78,12 @@ jobs:
 
       - name: Copy code to server
         run: |
-          scp -i "pennsylvania-sam-mbp.pem" -r release/* ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com:/home/ubuntu/app2/
+          scp -i "$SSH_KEY_PATH" -r release/* $SERVER_USERNAME@$SERVER_IP:$TARGET_DIR/
 
       - name: Install Node Modules on Server
         run: |
-          ssh -i "pennsylvania-sam-mbp.pem" ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com "cd /home/ubuntu/app2/foo && npm install"
+          ssh -i "$SSH_KEY_PATH" $SERVER_USERNAME@$SERVER_IP "cd $TARGET_DIR/foo && npm install"
 
       - name: Restart systemd service
         run: |
-          ssh -i "pennsylvania-sam-mbp.pem" ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com "sudo systemctl restart myapp"
+          ssh -i "$SSH_KEY_PATH" $SERVER_USERNAME@$SERVER_IP "sudo systemctl restart myapp"
