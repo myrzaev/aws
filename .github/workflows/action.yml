@@ -45,6 +45,11 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > pennsylvania-sam-mbp.pem
           chmod 600 pennsylvania-sam-mbp.pem
+
+      - name: Ensure SSH Directory Exists
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
       
       - name: Add Server to Known Hosts
         run: |
