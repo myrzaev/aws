@@ -35,6 +35,12 @@ jobs:
        with:
         name: release-artifact
         path: release/
+
+     - name: Upload artifact (node_modules)
+       uses: actions/upload-artifact@v4
+       with:
+        name: node-modules-artifact
+        path: node_modules
   
   deploy:
     name: deploy
@@ -67,6 +73,12 @@ jobs:
         with:
           name: release-artifact
           path: release/
+
+      - name: Download node-modules artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: node-modules-artifact
+          path: node_modules
 
       - name: Copy Code to Server
         run: |
