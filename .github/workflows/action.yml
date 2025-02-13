@@ -71,5 +71,6 @@ jobs:
       - name: Copy Code to Server
         run: |
           scp -i "pennsylvania-sam-mbp.pem" -r release/* ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com:/home/ubuntu/app2/
+          scp -i "pennsylvania-sam-mbp.pem" -r node_modules ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com:/home/ubuntu/app2/
 
           
