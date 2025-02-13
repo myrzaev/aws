@@ -63,12 +63,9 @@ jobs:
         run: |
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
-      - name: SSH into Server and List Files
-        run: ssh -i "$SSH_KEY_PATH" $SERVER_USERNAME@$SERVER_IP "ls -lah"
-
       - name: Create target directory on server
         run: |
-          ssh -i "$SSH_KEY_PATH" $SERVER_USERNAME@$SERVER_IP "mkdir -p $TARGET_DIR/foo"
+          ssh -i "$SSH_KEY_PATH" $SERVER_USERNAME@$SERVER_IP "mkdir -p $TARGET_DIR"
 
       - name: Download build artifact
         uses: actions/download-artifact@v4
