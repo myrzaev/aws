@@ -79,4 +79,4 @@ jobs:
 
       - name: Restart systemd service
         run: |
-          sudo systemctl restart myapp
+          ssh -i "pennsylvania-sam-mbp.pem" ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com "sudo systemctl restart myapp"
