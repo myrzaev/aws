@@ -58,6 +58,10 @@ jobs:
       - name: SSH into Server and List Files
         run: ssh -i "pennsylvania-sam-mbp.pem" ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com "ls -lah"
 
+      - name: Create target directory on server
+        run: |
+          ssh -i "pennsylvania-sam-mbp.pem" ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com "mkdir -p /home/ubuntu/app2/foo"
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
