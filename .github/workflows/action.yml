@@ -28,6 +28,7 @@ jobs:
        run: |
         mkdir -p release
         cp -r dist/* release/
+        cp package.json package-lock.json release/
        shell: bash
 
      - name: Upload artifact
@@ -35,12 +36,6 @@ jobs:
        with:
         name: release-artifact
         path: release/
-
-     - name: Upload artifact (node_modules)
-       uses: actions/upload-artifact@v4
-       with:
-        name: node-modules-artifact
-        path: ~/.npm
   
   deploy:
     name: deploy
@@ -74,18 +69,10 @@ jobs:
           name: release-artifact
           path: release/
 
-      - name: Download node-modules artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: node-modules-artifact
-          path: node_modules
-
       - name: Copy code to server
         run: |
           scp -i "pennsylvania-sam-mbp.pem" -r release/* ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com:/home/ubuntu/app2/
 
-      - name: Copy node_modules to server
+      - name: Install Node Modules on Server
         run: |
-          scp -i "pennsylvania-sam-mbp.pem" -r node_modules ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com:/home/ubuntu/app2/
-
-          
+          ssh -i "pennsylvania-sam-mbp.pem" ubuntu@ec2-18-226-104-112.us-east-2.compute.amazonaws.com "cd /home/ubuntu/app2/foo && npm install"
