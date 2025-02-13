@@ -37,7 +37,8 @@ jobs:
         path: release/
   
   deploy:
-    name: Deploy
+    name: deploy
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Setup SSH Key
